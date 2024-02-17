@@ -10,6 +10,10 @@ app.use(cors())
 
 app.use(express.json())
 
+app.use('/api/users',require('./routes/userRoutes'))
+app.use('/api/mechanics',require('./routes/mechanicROutes'))
+app.use('/api/requests',require('./routes/requestRoutes'))
+
 connectDb();
 
 app.use(errorHandler);

@@ -1,17 +1,18 @@
 const jwt = require('jsonwebtoken')
+const asyncHandler = require('express-async-handler')
 
 exports.generateToken = (payload) => {
     const token = jwt.sign(payload,process.env.secret_key)
     return token
 }
 
-exports.verifyToken=async(req,res,next)=>{
+exports.verifyToken=asyncHandler(async(req,res,next)=>{
     const token = req.headers.authorization&&req.headers.authorization.startsWith("Bearer")?req.headers.authorization.split(" ")[1] : false;
     if (!token) {
       return res.status(401).json({ message: "No Token Provided" });
     }
     try {
-      const isValid = jwt.verify(token, process.env.secret_key);
+      const isValid =await jwt.verify(token, process.env.secret_key);
       console.log(isValid);
       req.userId = isValid.userId; //Add the decoded payload to the request object
       if (isValid) {
@@ -25,4 +26,4 @@ exports.verifyToken=async(req,res,next)=>{
         message: "Something went wrong !!..",
       });
     }
-}
+})

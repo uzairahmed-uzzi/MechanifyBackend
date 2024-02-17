@@ -1,4 +1,4 @@
-const userModel = require('../model/userScehema')
+const userModel = require('../schemas/userSchema')
 const asyncHandler = require('express-async-handler')
 
 exports.getMechanics=asyncHandler(async(req,res)=>{

@@ -2,6 +2,7 @@ const asyncHandler = require("express-async-handler");
 const userModel = require("../schemas/userSchema");
 const bcrypt = require("bcrypt");
 const {generateToken, verifyToken} = require("../middlewares/jwt");
+
 exports.signUp=asyncHandler(async(req,res)=>{
     const {name,email,password,role,phoneNum}=req.body;
 
@@ -106,4 +107,26 @@ exports.updateUser = asyncHandler(async (req, res) => {
      status: true,
    });
 
+})
+
+
+exports.updatePassword=asyncHandler(async(req,res)=>{
+    const {userid,password}=req.body
+    if(!password || !userid){
+        res.status(400)
+        throw new Error('Required fields are missing')
+    }
+    const hashedPassword = await bcrypt.hash(password,10)
+    const user = await userModel.findByIdAndUpdate(userid,{password:hashedPassword},{new:true})
+    if(!user){
+        res.status(400)
+        throw new Error('User not found')
+    }
+    const token=await generateToken({userId:user.id,email:user.email})
+    res.status(200).json({
+        message: "Password updated succesfully !!..",
+        data: user,
+        status: true,
+        token
+    })
 })

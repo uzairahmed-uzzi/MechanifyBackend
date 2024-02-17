@@ -1,6 +1,6 @@
 const asyncHandler=require('express-async-handler')
-const Request=require('../model/requestSchema')
-const User = require('../model/userScehema')
+const Request=require('../schemas/requestSchema')
+const User = require('../schemas/userSchema')
 
 exports.requestMechanic=asyncHandler(async(req,res)=>{
     const {requestor,services,mechanic,description,longitude,latitude}=req.body
