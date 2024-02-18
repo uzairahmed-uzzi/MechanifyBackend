@@ -3,6 +3,8 @@ const userModel = require("../schemas/userSchema");
 const bcrypt = require("bcrypt");
 const {generateToken, verifyToken} = require("../middlewares/jwt");
 const _ = require("lodash");
+
+
 exports.signUp=asyncHandler(async(req,res)=>{
     const {username,email,password,role,phoneNum}=req.body;
 
@@ -62,7 +64,7 @@ exports.login = asyncHandler(async (req, res) => {
       // User get
       res.status(200).json({
         message: "User logged in succesfully !!..",
-        data: user,
+        data: _.omit(user, password),
         token,
         status: true,
       });
@@ -80,14 +82,14 @@ exports.getUser = asyncHandler(async (req, res) => {
    }
    res.status(200).json({
      message: "User retrieved succesfully !!..",
-     data: user,
+     data: _.omit(user, password),
      status: true,
    });
 })
 
 exports.updateUser = asyncHandler(async (req, res) => {
    
-   const { username, address, latitude, longitude,services,role,phoneNum,appointment_date_time } = req.body;
+   const { username, latitude, longitude,services,role,phoneNum,appointment_date_time } = req.body;
    // If fields are missing
    if (!username) {
      res.status(400)
@@ -95,7 +97,7 @@ exports.updateUser = asyncHandler(async (req, res) => {
    }
 
    //update User
-   const user = await userModel.findByIdAndUpdate(req.userId,{username,address, latitude, longitude,services,role,phoneNum,appointment_date_time},{new:true});
+   const user = await userModel.findByIdAndUpdate(req.userId,{username, latitude, longitude,services,role,phoneNum,appointment_date_time},{new:true});
    if (!user) {
      res.status(400)
      throw new Error( "User not found") ;
@@ -125,8 +127,33 @@ exports.updatePassword=asyncHandler(async(req,res)=>{
     const token=await generateToken({userId:user.id,email:user.email})
     res.status(200).json({
         message: "Password updated succesfully !!..",
-        data: user,
+        data: _.omit(user, password),
         status: true,
         token
     })
 })
+
+exports.deleteUser = asyncHandler(async (req, res) => {
+   
+    // If fields are missing
+    if (!req.userId) {
+      res.status(400)
+      throw new Error( "Required fields are missing") ;
+    }
+ 
+    //delete User
+    const user = await userModel.findByIdAndDelete(req.userId);
+    if (!user) {
+      res.status(400)
+      throw new Error( "User not found") ;
+    }
+ 
+    res.status(200).json({
+      message: "User deleted succesfully !!..",
+      data: _.omit(user, password),
+      status: true,
+    });
+ 
+ })
+
+ 

@@ -18,10 +18,6 @@ const userSchema = new mongoose.Schema({
         default: "user",
         required: true
     },
-    address:{
-        type: String,
-        
-    },
     latitude:{
         type:Number,
         
