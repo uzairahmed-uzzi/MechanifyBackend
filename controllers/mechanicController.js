@@ -22,9 +22,10 @@ exports.getMechanics=asyncHandler(async(req,res)=>{
         res.status(404)
         throw new Error("Mechanics not found")
     }
+    let mechanicsWithDistance=mechanics
     if(longitude && latitude){
         
-        const mechanicsWithDistance = mechanics.map(mechanic => {
+        mechanicsWithDistance = mechanics.map(mechanic => {
             // const distance = geolib.getDistance(
             //     { latitude, longitude },
             //     { latitude: mechanic.latitude, longitude: mechanic.longitude  },
@@ -34,10 +35,7 @@ exports.getMechanics=asyncHandler(async(req,res)=>{
             });
             // console.log("Distance----",distance)
             mechanicsWithDistance.sort((a, b) => a.distance - b.distance); 
-            let upTo20=mechanicsWithDistance.length>20?mechanicsWithDistance.slice(0,20):mechanicsWithDistance
-            res.status(200).send(upTo20)
-    }else{
-        let upTo20=mechanics.length>20?mechanics.slice(0,20):mechanics
+        }
+        let upTo20=mechanicsWithDistance.length>20?mechanicsWithDistance.slice(0,20):mechanicsWithDistance
         res.status(200).send(upTo20)
-    }
 })

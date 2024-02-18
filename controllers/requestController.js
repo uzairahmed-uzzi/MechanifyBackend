@@ -1,6 +1,8 @@
 const asyncHandler=require('express-async-handler')
 const Request=require('../schemas/requestSchema')
+const Review = require('../schemas/reviewSchema')
 const User = require('../schemas/userSchema')
+const _ = require("lodash");
 
 exports.requestMechanic=asyncHandler(async(req,res)=>{
     const {requestor,services,mechanic,description,longitude,latitude}=req.body
@@ -32,29 +34,62 @@ exports.getAllRequests=asyncHandler(async(req,res)=>{
        res.status(400)
        throw new Error('No requests found')      
    }
+
+    const requestWithReviews = await Promise.all(requests.map(async (ele, ind) => {
+     try {
+         const reviews = await Review.find({ _id: ele.review });
+         return {
+             data: { ..._.omit(ele, 'review'), reviews }
+         };
+     } catch (error) {
+         console.error("Error fetching reviews:", error);
+         return {
+             data: { ..._.omit(ele, 'review'), reviews: [] } // Return empty array if error occurs
+         };
+     }
+    }));
+
+    
+
    res.status(200).json({
        message: "Requests fetched succesfully !!..",
-       data: requests,
+       requestWithReviews,
        status: true,
    })
 })
+
 exports.getAllRequestsOfMechanics=asyncHandler(async(req,res)=>{
     const mechanic=req.params.id
-   if(!mechanic){
-       res.status(400)
-       throw new Error('Required fields are missing')      
-   }
+    if(!mechanic){
+        res.status(400)
+        throw new Error('Required fields are missing')      
+    }
    const requests = await Request.find({mechanic:mechanic}) 
    if(!requests){
        res.status(400)
        throw new Error('No requests found')      
    }
+   const requestWithReviews = await Promise.all(requests.map(async (ele, ind) => {
+    try {
+        const reviews = await Review.find({ _id: ele.review });
+        return {
+            data: { ..._.omit(ele, 'review'), reviews }
+        };
+    } catch (error) {
+        console.error("Error fetching reviews:", error);
+        return {
+            data: { ..._.omit(ele, 'review'), reviews: [] } // Return empty array if error occurs
+        };
+    }
+   }));
+
    res.status(200).json({
        message: "Requests fetched succesfully !!..",
-       data: requests,
+       requestWithReviews,
        status: true,
    })
 })
+
 exports.getRequest=asyncHandler(async(req,res)=>{
   const id=req.params.id
   if(!id){
@@ -69,9 +104,15 @@ exports.getRequest=asyncHandler(async(req,res)=>{
   }
   const {requestor,mechanic}=request
   const users = await User.find({_id:{$in:[requestor,mechanic]}})
+  const requestWithReview =async() =>{
+    const reviews=await Review.find({ _id: request.review });
+  return {
+      data: { ..._.omit(request, 'review'), reviews }
+  };
+}
   res.status(200).json({
       message: "Request fetched succesfully !!..",
-      data: {request,users} ,
+      data: {requestWithReview,users} ,
       status: true,
   })
 })
@@ -83,10 +124,13 @@ exports.delRequest=asyncHandler(async(req,res)=>{
         throw new Error('Required fields are missing')
     }   
     const requests = await Request.findByIdAndDelete({_id:id})  
+
     if(!requests){
         res.status(400)
         throw new Error('Something went wrong...')
     } 
+    
+    await Review.findByIdAndDelete({_id:requests.review})
     res.status(200).json({
         message: "Request deleted succesfully !!..",
         data: requests,
@@ -100,15 +144,17 @@ exports.updateRequest=asyncHandler(async(req,res)=>{
         res.status(400)
         throw new Error('Required fields are missing')
     }
-    const {isAccepted,mechanic,services,currentStatus,longitude,latitude,requestor,description}=req.body 
-    const requests = await Request.findByIdAndUpdate({_id:id},{isAccepted,mechanic,services,currentStatus,longitude,latitude,requestor,description},{new:true})  
+    const {isAccepted,mechanic,services,currentStatus,longitude,latitude,requestor,description,rating,reviewDescription}=req.body 
+    const reviews = await Review.create({rating,description:reviewDescription})
+    const requests = await Request.findByIdAndUpdate({_id:id},{isAccepted,mechanic,services,currentStatus,longitude,latitude,requestor,description,review:reviews._id},{new:true})  
     if(!requests){
         res.status(400)
         throw new Error('Something went wrong...')
     } 
+    
     res.status(200).json({
         message: "Request updated succesfully !!..",
-        data: requests,
+        data: requests,reviews,
         status: true,
         
     })   

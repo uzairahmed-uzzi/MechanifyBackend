@@ -1,5 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const userModel = require("../schemas/userSchema");
+const Review = require("../schemas/reviewSchema");
 const bcrypt = require("bcrypt");
 const {generateToken, verifyToken} = require("../middlewares/jwt");
 const _ = require("lodash");
@@ -80,9 +81,22 @@ exports.getUser = asyncHandler(async (req, res) => {
      res.status(404)
      throw new Error( "User not found") ;
    }
+   let avgRating=0.0;
+   if(user.role == "mechanic"){
+    const requests = await Request.find({mechanic:user._id})
+    if(requests){
+        ratings=0
+        requests.map(async(ele)=>{
+            const review = await Review.find({ _id: ele.review });
+            ratings +=review.rating
+        })
+        avgRating = ratings/requests.length
+       
+    }
+   }
    res.status(200).json({
      message: "User retrieved succesfully !!..",
-     data: _.omit(user, password),
+     data: {..._.omit(user, password),avgRating},
      status: true,
    });
 })
@@ -147,7 +161,13 @@ exports.deleteUser = asyncHandler(async (req, res) => {
       res.status(400)
       throw new Error( "User not found") ;
     }
- 
+    if(user.role == "mechanic"){
+        const requests= Request.find({mechanic:user._id})
+        requests.map(async(ele,ind)=>{
+            const rev=await Review.deleteMany({_id:ele.review})
+            console.log(rev)
+        })
+    }
     res.status(200).json({
       message: "User deleted succesfully !!..",
       data: _.omit(user, password),

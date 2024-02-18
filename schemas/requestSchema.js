@@ -40,6 +40,11 @@ const requestSchema = new mongoose.Schema({
     },
     description:{
         type:String
+    },
+    review:
+    {
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"review"
     }
 },{
     timestamps:true,
