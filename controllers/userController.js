@@ -2,11 +2,11 @@ const asyncHandler = require("express-async-handler");
 const userModel = require("../schemas/userSchema");
 const bcrypt = require("bcrypt");
 const {generateToken, verifyToken} = require("../middlewares/jwt");
-
+const _ = require("lodash");
 exports.signUp=asyncHandler(async(req,res)=>{
-    const {name,email,password,role,phoneNum}=req.body;
+    const {username,email,password,role,phoneNum}=req.body;
 
-    if(!name || !email || !password){
+    if(!username || !email || !password){
         res.status(400)
         throw new Error("Please add all fields")
     }
@@ -17,7 +17,7 @@ exports.signUp=asyncHandler(async(req,res)=>{
     }
     const hashedPassword = await bcrypt.hash(password,10)
     const user = await userModel.create({
-        name,
+        username,
         email,
         password:hashedPassword,
         role,
