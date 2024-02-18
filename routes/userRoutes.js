@@ -10,7 +10,7 @@ router.post("/sendOtp",sendOtp);
 router.post("/verifyOtp",verifyOtp);
 router.post("/signup",signUp);
 router.post("/login",login);
-router.get("/getuser",verifyToken,getUser);
+router.get("/getuser/:id",verifyToken,getUser);
 router.post("/getMechanics",verifyToken,getMechanics);
 router.put("/updateuser",verifyToken,updateUser);
 router.post('/updatePassword',updatePassword)
