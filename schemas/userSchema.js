@@ -31,6 +31,9 @@ const userSchema = new mongoose.Schema({
     },
     phoneNum:{
         type: String,
+    },
+    image:{
+        type:String
     }
 },{
     timestamps:true

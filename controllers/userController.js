@@ -5,7 +5,6 @@ const bcrypt = require("bcrypt");
 const {generateToken, verifyToken} = require("../middlewares/jwt");
 const _ = require("lodash");
 
-
 exports.signUp=asyncHandler(async(req,res)=>{
     const {username,email,password,role,phoneNum}=req.body;
 
@@ -75,7 +74,8 @@ exports.login = asyncHandler(async (req, res) => {
 
 
 exports.getUser = asyncHandler(async (req, res) => {
-    const user = await userModel.findOne({_id:req.userId});
+    const id= req.params.id
+    const user = await userModel.findOne({_id:id});
    // const user = await userModel.find();
    if (!user) {
      res.status(404)
