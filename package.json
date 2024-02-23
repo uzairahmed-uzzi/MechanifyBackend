@@ -31,6 +31,7 @@
     "nodemon": "^3.0.3",
     "otp-generator": "^4.0.1",
     "random": "^4.1.0",
-    "twilio": "^4.22.0"
+    "twilio": "^4.22.0",
+    "vercel": "^33.5.2"
   }
 }

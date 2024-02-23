@@ -2,10 +2,10 @@ const asyncHandler=require('express-async-handler')
 const otp=require('../schemas/otpSchema')
 const otpGenerator = require('otp-generator')
 const twilio = require('twilio')
-const sid=process.env.SID
-const authtoken=process.env.safe_token
+const sid=process.env.TWILIO_ACCOUNT_SID
+const authtoken=process.env.TWILIO_AUTH_TOKEN
 
-const client = twilio(sid,authtoken)
+const client =new twilio.Twilio(sid,authtoken)
 
 exports.sendOtp=asyncHandler(async(req,res)=>{
     const {userid,phoneNum}=req.body
