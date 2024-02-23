@@ -17,9 +17,6 @@ app.use('/api/mechanics',require('./routes/mechanicRoutes'))
 app.use('/api/requests',require('./routes/requestRoutes'))
 app.use('/api/appDetails',require('./routes/appDetailRoutes'))
 
-app.get('/',(req,res)=>{
-    res.send('Hello World')
-})
 
 app.use(errorHandler);
 app.listen(PORT,()=>{
