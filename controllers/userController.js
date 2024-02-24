@@ -40,7 +40,7 @@ exports.signUp=asyncHandler(async(req,res)=>{
     const token =await generateToken({userId:user._id,email:user.email})
     res.status(200).json({
         message:"User created",
-        data: _.omit(user, password),
+        data: _.omit(user._doc, password),
         token,
         status: true
     })
@@ -74,7 +74,7 @@ exports.login = asyncHandler(async (req, res) => {
       };
       const token = await generateToken(tokenObj);
       // User get
-      let {password,...others}=user
+      let {password,...others}=user._doc
       res.status(200).json({
         message: "User logged in succesfully !!..",
         data: others,
@@ -107,7 +107,7 @@ exports.getUser = asyncHandler(async (req, res) => {
        
     }
    }
-   let {password,...others}=user
+   let {password,...others}=user._doc
    res.status(200).json({
      message: "User retrieved succesfully !!..",
      data: {others,avgRating},
@@ -168,7 +168,7 @@ exports.updatePassword=asyncHandler(async(req,res)=>{
     const token=await generateToken({userId:user.id,email:user.email})
     res.status(200).json({
         message: "Password updated succesfully !!..",
-        data: _.omit(user, password),
+        data: _.omit(user._doc, password),
         status: true,
         token
     })
