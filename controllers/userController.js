@@ -4,6 +4,17 @@ const Review = require("../schemas/reviewSchema");
 const bcrypt = require("bcrypt");
 const {generateToken, verifyToken} = require("../middlewares/jwt");
 const _ = require("lodash");
+const cloudinary = require('cloudinary').v2;
+const multer = require('multer')
+
+
+// Configure Cloudinary
+cloudinary.config({
+  cloud_name: 'Untitled',
+  api_key: process.env.api_key,
+  api_secret: process.env.api_secret
+});
+
 
 exports.signUp=asyncHandler(async(req,res)=>{
     const {username,email,password,role,phoneNum}=req.body;
@@ -107,11 +118,24 @@ exports.updateUser = asyncHandler(async (req, res) => {
    // If fields are missing
    if (!username) {
      res.status(400)
-     throw new Error( "Required fields are missing") ;
+     throw new Error( "Required fields are missing");
+   }
+  const imageData = req.body.image;
+
+  // Decode base64 image data to binary format
+  const binaryData = Buffer.from(imageData, 'base64');
+
+  // Upload image to Cloudinary
+  const img = await cloudinary.uploader.upload(binaryData, {
+    resource_type: 'image'
+  });  
+   if(!img){
+       res.status(400)
+       throw new Error( "Image not uploaded")
    }
 
    //update User
-   const user = await userModel.findByIdAndUpdate(req.userId,{username, latitude, longitude,services,role,phoneNum,appointment_date_time},{new:true});
+   const user = await userModel.findByIdAndUpdate(req.userId,{username, latitude, longitude,services,role,phoneNum,appointment_date_time,image:img.secure_url},{new:true});
    if (!user) {
      res.status(400)
      throw new Error( "User not found") ;
