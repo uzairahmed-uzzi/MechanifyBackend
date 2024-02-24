@@ -127,11 +127,6 @@ exports.updateUser = asyncHandler(async (req, res) => {
   //  }
   const imageData = req.body.image;
 
-  // Decode base64 image data to binary format
-  const binaryData = Buffer.from(imageData, 'base64');
-  console.log(binaryData)
-
-
   // Upload image to Cloudinary
   const img = await cloudinary.uploader.upload(imageData, {
     resource_type: 'image'
@@ -142,7 +137,6 @@ exports.updateUser = asyncHandler(async (req, res) => {
        throw new Error( "Image not uploaded")
    }
    console.log(img)
-
 
    //update User
    const user = await userModel.findByIdAndUpdate(req.userId,{username, latitude, longitude,services,role,phoneNum,appointment_date_time,image:img.secure_url},{new:true});
