@@ -13,15 +13,16 @@ exports.verifyToken=asyncHandler(async(req,res,next)=>{
     }
     try {
       const isValid =await jwt.verify(token, process.env.secret_key);
-      console.log(isValid);
+      console.log("isValid",isValid);
       req.userId = isValid.userId; //Add the decoded payload to the request object
       if (isValid) {
         next();
       } else {
+        console.log("Invalid user");
         res.json({ message: "Invalid user" });
       }
     } catch (err) {
-      console.log(err);
+      console.log("--->",err);
       res.status(500).json({
         message: "Something went wrong !!..",
       });

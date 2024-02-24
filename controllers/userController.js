@@ -11,7 +11,7 @@ const cloudinary = require('cloudinary').v2;
 
 // Configure Cloudinary
 cloudinary.config({
-  cloud_name: 'Untitled',
+  cloud_name: 'dmv6xucum',
   api_key: process.env.api_key,
   api_secret: process.env.api_secret
 });
@@ -98,6 +98,7 @@ exports.getUser = asyncHandler(async (req, res) => {
    let avgRating=0.0;
    if(user.role == "mechanic"){
     const requests = await Request.find({mechanic:user._id})
+    console.log(requests)
     if(requests){
         ratings=0
         requests.map(async(ele)=>{
@@ -108,7 +109,7 @@ exports.getUser = asyncHandler(async (req, res) => {
        
     }
    }
-   let {password,...others}=user._doc
+   let {password,...others}=user
    res.status(200).json({
      message: "User retrieved succesfully !!..",
      data: {others,avgRating},
@@ -120,23 +121,28 @@ exports.updateUser = asyncHandler(async (req, res) => {
    
    const { username, latitude, longitude,services,role,phoneNum,appointment_date_time } = req.body;
    // If fields are missing
-   if (!username) {
-     res.status(400)
-     throw new Error( "Required fields are missing");
-   }
+  //  if (!username) {
+  //    res.status(400)
+  //    throw new Error( "Required fields are missing");
+  //  }
   const imageData = req.body.image;
 
   // Decode base64 image data to binary format
   const binaryData = Buffer.from(imageData, 'base64');
+  console.log(binaryData)
+
 
   // Upload image to Cloudinary
-  const img = await cloudinary.uploader.upload(binaryData, {
+  const img = await cloudinary.uploader.upload(imageData, {
     resource_type: 'image'
   });  
    if(!img){
+
        res.status(400)
        throw new Error( "Image not uploaded")
    }
+   console.log(img)
+
 
    //update User
    const user = await userModel.findByIdAndUpdate(req.userId,{username, latitude, longitude,services,role,phoneNum,appointment_date_time,image:img.secure_url},{new:true});
