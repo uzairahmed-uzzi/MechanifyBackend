@@ -74,7 +74,6 @@ exports.updateAppDetail = asyncHandler(async (req, res) => {
 });
 
 
-
 // Delete AppDetail by ID
 exports.deleteAppDetailById = asyncHandler(async (req, res) => {
     const { _id } = req.params; // Assuming you're passing the ID in the URL params

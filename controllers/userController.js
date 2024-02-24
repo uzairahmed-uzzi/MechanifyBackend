@@ -1,6 +1,7 @@
 const asyncHandler = require("express-async-handler");
 const userModel = require("../schemas/userSchema");
 const Review = require("../schemas/reviewSchema");
+const Request = require("../schemas/requestSchema");
 const bcrypt = require("bcrypt");
 const {generateToken, verifyToken} = require("../middlewares/jwt");
 const _ = require("lodash");
@@ -73,9 +74,10 @@ exports.login = asyncHandler(async (req, res) => {
       };
       const token = await generateToken(tokenObj);
       // User get
+      let {password,...others}=user
       res.status(200).json({
         message: "User logged in succesfully !!..",
-        data: _.omit(user, password),
+        data: others,
         token,
         status: true,
       });
@@ -105,9 +107,10 @@ exports.getUser = asyncHandler(async (req, res) => {
        
     }
    }
+   let {password,...others}=user
    res.status(200).json({
      message: "User retrieved succesfully !!..",
-     data: {..._.omit(user, password),avgRating},
+     data: {others,avgRating},
      status: true,
    });
 })
