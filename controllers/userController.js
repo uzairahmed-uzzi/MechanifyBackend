@@ -88,12 +88,13 @@ exports.login = asyncHandler(async (req, res) => {
 
 exports.getUser = asyncHandler(async (req, res) => {
     const id= req.params.id
-    const user = await userModel.findOne({_id:id});
+    let user = await userModel.findOne({_id:id});
    // const user = await userModel.find();
    if (!user) {
      res.status(404)
      throw new Error( "User not found") ;
    }
+   user = user._doc
    let avgRating=0.0;
    if(user.role == "mechanic"){
     const requests = await Request.find({mechanic:user._id})
