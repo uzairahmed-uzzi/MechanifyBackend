@@ -153,8 +153,11 @@ exports.updateRequest=asyncHandler(async(req,res)=>{
         res.status(400)
         throw new Error('Required fields are missing')
     }
-    const {isAccepted,mechanic,services,currentStatus,longitude,latitude,requestor,description,rating,reviewDescription}=req.body 
-    const reviews = await Review.create({rating,description:reviewDescription})
+    const {isAccepted,services,currentStatus,description,rating,reviewDescription}=req.body 
+    let reviews=[]
+    if(rating && reviewDescription){
+        reviews = await Review.create({rating,description:reviewDescription})
+    }
     const requests = await Request.findByIdAndUpdate({_id:id},{isAccepted,mechanic,services,currentStatus,longitude,latitude,requestor,description,review:reviews._id},{new:true})  
     if(!requests){
         res.status(400)
