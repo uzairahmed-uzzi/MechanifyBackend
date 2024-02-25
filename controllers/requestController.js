@@ -7,7 +7,7 @@ const _ = require("lodash");
 
 exports.requestMechanic=asyncHandler(async(req,res)=>{
     const {requestor,services,mechanic,description,longitude,latitude}=req.body
-    if(!requestor||!mechanic || !services ){
+    if(!requestor||!mechanic || !services || !longitude || !latitude ){
         res.status(400)
         throw new Error('Required fields are missing')
     }

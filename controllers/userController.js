@@ -96,7 +96,7 @@ exports.getUser = asyncHandler(async (req, res) => {
    }
    user = user._doc
    let avgRating=0.0;
-   if(user.role == "mechanic"){
+   if(user.role == "Mechanic"){
     const requests = await Request.find({mechanic:user._id})
     console.log(requests)
     if(requests){
@@ -189,7 +189,7 @@ exports.deleteUser = asyncHandler(async (req, res) => {
       res.status(400)
       throw new Error( "User not found") ;
     }
-    if(user.role == "mechanic"){
+    if(user.role == "Mechanic"){
         const requests= Request.find({mechanic:user._id})
         requests.map(async(ele,ind)=>{
             const rev=await Review.deleteMany({_id:ele.review})
