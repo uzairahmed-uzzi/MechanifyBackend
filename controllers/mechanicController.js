@@ -7,14 +7,14 @@ exports.getMechanics=asyncHandler(async(req,res)=>{
     if (services){
         let ids=services.map((s,i)=>s.id)
         mechanics = await userModel.find({
-            role: "mechanic",
+            role: "Mechanic",
             "services.id": { $in: ids },
             longitude: { $exists: true, $ne: null }, // Check if longitude exists and is not null
             latitude: { $exists: true, $ne: null }   // Check if latitude exists and is not null
         });
     }
     else{
-         mechanics=await userModel.find({ role: "mechanic"   ,
+         mechanics=await userModel.find({ role: "Mechanic"   ,
          longitude: { $exists: true, $ne: null }, 
          latitude: { $exists: true, $ne: null } })
     }
