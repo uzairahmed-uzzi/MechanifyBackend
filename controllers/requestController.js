@@ -133,13 +133,13 @@ exports.delRequest=asyncHandler(async(req,res)=>{
         throw new Error('Required fields are missing')
     }   
     const requests = await Request.findByIdAndDelete({_id:id})  
-
     if(!requests){
         res.status(400)
         throw new Error('Something went wrong...')
     } 
-    
-    await Review.findByIdAndDelete({_id:requests.review})
+    if(requests.review){
+        await Review.findByIdAndDelete({_id:requests.review})
+    }
     res.status(200).json({
         message: "Request deleted succesfully !!..",
         data: requests,
