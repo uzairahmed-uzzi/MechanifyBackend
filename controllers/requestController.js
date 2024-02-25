@@ -158,7 +158,7 @@ exports.updateRequest=asyncHandler(async(req,res)=>{
     if(rating && reviewDescription){
         reviews = await Review.create({rating,description:reviewDescription})
     }
-    const requests = await Request.findByIdAndUpdate({_id:id},{isAccepted,mechanic,services,currentStatus,longitude,latitude,requestor,description,review:reviews._id},{new:true})  
+    const requests = await Request.findByIdAndUpdate({_id:id},{isAccepted,services,currentStatus,description,review:reviews._id},{new:true})  
     if(!requests){
         res.status(400)
         throw new Error('Something went wrong...')
