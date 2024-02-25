@@ -6,17 +6,17 @@ const _ = require("lodash");
 
 
 exports.requestMechanic=asyncHandler(async(req,res)=>{
-    const {requestor,services,mechanic,description,longitude,latitude}=req.body
-    if(!requestor||!mechanic || !services || !longitude || !latitude ){
+    const {requestor,services,mechanic,description,longitude,latitude,appointment_date_time}=req.body
+    if(!requestor||!mechanic || !services || !longitude || !latitude || !appointment_date_time){
         res.status(400)
         throw new Error('Required fields are missing')
     }
-    const isExist=await Request.findOne({requestor,services,mechanic,currentStatus:{$in:["pending","inprogress"]}})
+    const isExist=await Request.findOne({requestor,services,mechanic,currentStatus:{$in:["pending","inprogress"]},appointment_date_time})
     if(isExist){
         res.status(400)
         throw new Error('Request already exists')
     }
-    const request = await Request.create({requestor,services,mechanic,description,longitude,latitude})
+    const request = await Request.create({requestor,services,mechanic,description,longitude,latitude,appointment_date_time})
     res.status(200).json({
         message: "Request created succesfully !!..",
         data: request,
