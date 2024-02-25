@@ -4,7 +4,7 @@ const asyncHandler = require('express-async-handler')
 exports.getMechanics=asyncHandler(async(req,res)=>{
     let {longitude,latitude,services}=req.body
     let mechanics=""
-    if (services){
+    if (services && services.length > 0) {
         let ids=services.map((s,i)=>s.id)
         mechanics = await userModel.find({
             role: "Mechanic",
