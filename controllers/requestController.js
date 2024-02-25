@@ -41,6 +41,7 @@ exports.getAllRequests=asyncHandler(async(req,res)=>{
          const reviews = await Review.find({ _id: ele.review });
          const mechanic =  await User.find({_id:ele.mechanic})
          const requestor = await User.find({_id:ele.requestor})
+         console.log("-------------->",reviews,mechanic,requestor)
          return {
              data: { ..._.omit(ele, 'review'), reviews,mechanic,requestor }
          };
