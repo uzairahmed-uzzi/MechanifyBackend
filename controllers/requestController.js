@@ -4,6 +4,7 @@ const Review = require('../schemas/reviewSchema')
 const User = require('../schemas/userSchema')
 const _ = require("lodash");
 
+
 exports.requestMechanic=asyncHandler(async(req,res)=>{
     const {requestor,services,mechanic,description,longitude,latitude}=req.body
     if(!requestor||!mechanic || !services || !location ){
@@ -38,8 +39,10 @@ exports.getAllRequests=asyncHandler(async(req,res)=>{
     const requestWithReviews = await Promise.all(requests.map(async (ele, ind) => {
      try {
          const reviews = await Review.find({ _id: ele.review });
+         const mechanic =  await User.find({_id:ele.mechanic})
+         const requestor = await User.find({_id:ele.requestor})
          return {
-             data: { ..._.omit(ele, 'review'), reviews }
+             data: { ..._.omit(ele, 'review'), reviews,mechanic,requestor }
          };
      } catch (error) {
          console.error("Error fetching reviews:", error);
@@ -72,8 +75,10 @@ exports.getAllRequestsOfMechanics=asyncHandler(async(req,res)=>{
    const requestWithReviews = await Promise.all(requests.map(async (ele, ind) => {
     try {
         const reviews = await Review.find({ _id: ele.review });
+        const mechanic =  await User.find({_id:ele.mechanic})
+        const requestor = await User.find({_id:ele.requestor})
         return {
-            data: { ..._.omit(ele, 'review'), reviews }
+            data: { ..._.omit(ele, 'review'), reviews,mechanic,requestor }
         };
     } catch (error) {
         console.error("Error fetching reviews:", error);

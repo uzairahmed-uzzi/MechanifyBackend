@@ -136,7 +136,7 @@ exports.updateUser = asyncHandler(async (req, res) => {
        res.status(400)
        throw new Error( "Image not uploaded")
    }
-   console.log(img)
+  
 
    //update User
    const user = await userModel.findByIdAndUpdate(req.userId,{username, latitude, longitude,services,role,phoneNum,appointment_date_time,image:img.secure_url},{new:true});
