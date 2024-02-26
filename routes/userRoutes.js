@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const {signUp,login,getUser,updateUser,updatePassword,deleteUser} = require('../controllers/userController');
+const {signUp,login,getUser,updateUser,updatePassword,deleteUser, changePassword} = require('../controllers/userController');
 const {verifyToken, verifyTokenForAdmin} = require("../middlewares/jwt");
 const { getMechanics } = require('../controllers/mechanicController');
 const {sendOtp,verifyOtp} = require('../controllers/otpController');
@@ -15,7 +15,8 @@ router.get("/getuser/:id",verifyToken,getUser);
 router.post("/getMechanics",verifyToken,getMechanics);
 router.put("/updateuser",verifyToken,updateUser);
 router.post('/updatePassword',updatePassword)
-router.delete('/deleteUser',verifyToken,deleteUser)
+router.post('/deleteUser',verifyToken,deleteUser)
+router.post('/changePassword',verifyToken,changePassword)
 
 // admin routes
 router.use(verifyTokenForAdmin)
