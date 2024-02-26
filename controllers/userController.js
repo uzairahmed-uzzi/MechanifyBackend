@@ -100,12 +100,17 @@ exports.getUser = asyncHandler(async (req, res) => {
     const requests = await Request.find({mechanic:user._id})
     console.log(requests)
     if(requests){
-        ratings=0
-        requests.map(async(ele)=>{
-            const review = await Review.find({ _id: ele.review });
-            ratings +=review.rating
-        })
-        avgRating = ratings/requests.length
+      let ratings = 0;
+      let counter=0
+      await Promise.all(requests.map(async (ele) => {
+          const review = await Review.find({ _id: ele.review });
+          if (review && review.length > 0) {
+              ratings += review[0].rating;
+              counter+=1
+          }
+      }));
+        console.log("Rating...",ratings)
+        avgRating = ratings/counter
         avgRating = avgRating.toFixed(2)
        
     }
