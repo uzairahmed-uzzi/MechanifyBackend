@@ -116,7 +116,8 @@ exports.getRequest=asyncHandler(async(req,res)=>{
   const requestWithReview =async() =>{
     const reviews=await Review.find({ _id: request.review });
   return {
-      data: { ..._.omit(request, 'review'), reviews }
+      data: { ..._.omit(request, 'review')}
+      , reviews
   };
 }
   res.status(200).json({
