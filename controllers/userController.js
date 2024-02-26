@@ -109,7 +109,6 @@ exports.getUser = asyncHandler(async (req, res) => {
               counter+=1
           }
       }));
-        console.log("Rating...",ratings)
         avgRating = ratings/counter
         avgRating = avgRating.toFixed(2)
        
