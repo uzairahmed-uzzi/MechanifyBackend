@@ -106,6 +106,7 @@ exports.getUser = asyncHandler(async (req, res) => {
             ratings +=review.rating
         })
         avgRating = ratings/requests.length
+        avgRating = avgRating.toFixed(2)
        
     }
    }
