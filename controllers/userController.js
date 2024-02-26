@@ -37,7 +37,7 @@ exports.signUp=asyncHandler(async(req,res)=>{
         role,
         phoneNum
     })
-    const token =await generateToken({userId:user._id,email:user.email})
+    const token =await generateToken({userId:user._id,email:user.email,role:user.role})
     res.status(200).json({
         message:"User created",
         data: _.omit(user._doc, password),
@@ -71,6 +71,8 @@ exports.login = asyncHandler(async (req, res) => {
     if (verifyHash) {
       const tokenObj = {
         userId:user._id,
+        email:user.email,
+        role:user.role
       };
       const token = await generateToken(tokenObj);
       // User get
