@@ -96,15 +96,17 @@ exports.getUser = asyncHandler(async (req, res) => {
    }
    user = user._doc
    let avgRating=0.0;
+   let requests =[]
+   let review=[]
    if(user.role == "Mechanic"){
-    const requests = await Request.find({mechanic:user._id})
+    requests = await Request.find({mechanic:user._id})
     console.log(requests)
     if(requests){
       let ratings = 0;
       let counter=0
       await Promise.all(requests.map(async (ele) => {
-          const review = await Review.find({ _id: ele.review });
-          if (review && review.length > 0) {
+        if (ele && ele.review) {
+              review = await Review.find({ _id: ele.review });
               ratings += review[0].rating;
               counter+=1
           }
@@ -117,7 +119,7 @@ exports.getUser = asyncHandler(async (req, res) => {
    let {password,...others}=user
    res.status(200).json({
      message: "User retrieved succesfully !!..",
-     data: {others,avgRating},
+     data: {others,avgRating,requests,review},
      status: true,
    });
 })
