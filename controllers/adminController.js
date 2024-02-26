@@ -4,8 +4,8 @@ const bcrypt = require('bcrypt')
 const _ = require("lodash");
 
 exports.getAllUsersByAdmin=asyncHandler(async(req,res)=>{
-    const user = await userModel.find();
-    if (!user) {
+    const users = await userModel.find();
+    if (!users) {
       res.status(404)
       throw new Error( "Users not found") ;
     }

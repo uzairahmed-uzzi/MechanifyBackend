@@ -86,8 +86,6 @@ exports.login = asyncHandler(async (req, res) => {
     }
 })
 
-
-
 exports.getUser = asyncHandler(async (req, res) => {
     const id= req.params.id
     let user = await userModel.findOne({_id:id});
