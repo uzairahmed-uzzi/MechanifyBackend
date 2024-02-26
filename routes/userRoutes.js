@@ -15,7 +15,7 @@ router.get("/getuser/:id",verifyToken,getUser);
 router.post("/getMechanics",verifyToken,getMechanics);
 router.put("/updateuser",verifyToken,updateUser);
 router.post('/updatePassword',updatePassword)
-router.delete('/deleteUser',verifyToken,deleteUser)
+router.post('/deleteUser',verifyToken,deleteUser)
 router.post('/changePassword',verifyToken,changePassword)
 
 // admin routes
