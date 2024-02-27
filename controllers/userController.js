@@ -133,16 +133,17 @@ exports.updateUser = asyncHandler(async (req, res) => {
   //    throw new Error( "Required fields are missing");
   //  }
   const imageData = req.body.image;
-
-  // Upload image to Cloudinary
-  const img = await cloudinary.uploader.upload(imageData, {
-    resource_type: 'image'
-  });  
-   if(!img){
-
-       res.status(400)
-       throw new Error( "Image not uploaded")
-   }
+  if(imageData){
+    // Upload image to Cloudinary
+    const img = await cloudinary.uploader.upload(imageData, {
+      resource_type: 'image'
+    });  
+    if(!img){
+      
+      res.status(400)
+      throw new Error( "Image not uploaded")
+    }
+  }
   
 
    //update User
