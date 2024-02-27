@@ -3,10 +3,10 @@ const Request=require('../schemas/requestSchema')
 const Review = require('../schemas/reviewSchema')
 const User = require('../schemas/userSchema')
 const _ = require("lodash");
-
+const {sendPushNotification} = require('../controllers/pushNotificationController')
 
 exports.requestMechanic=asyncHandler(async(req,res)=>{
-    const {requestor,services,mechanic,description,longitude,latitude,appointment_date_time}=req.body
+    const {requestor,services,mechanic,description,longitude,latitude,appointment_date_time,message}=req.body
     if(!requestor||!mechanic || !services || !longitude || !latitude || !appointment_date_time){
         res.status(400)
         throw new Error('Required fields are missing')
@@ -17,6 +17,11 @@ exports.requestMechanic=asyncHandler(async(req,res)=>{
         throw new Error('Request already exists')
     }
     const request = await Request.create({requestor,services,mechanic,description,longitude,latitude,appointment_date_time})
+    if(!request){
+        res.status(400)
+        throw new Error('Request not created')
+    }
+    sendPushNotification(mechanic,message)
     res.status(200).json({
         message: "Request created succesfully !!..",
         data: request,
