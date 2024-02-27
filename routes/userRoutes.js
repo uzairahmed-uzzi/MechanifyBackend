@@ -5,7 +5,7 @@ const {verifyToken, verifyTokenForAdmin} = require("../middlewares/jwt");
 const { getMechanics } = require('../controllers/mechanicController');
 const {sendOtp,verifyOtp} = require('../controllers/otpController');
 const { getAllUsersByAdmin,getUserByAdmin, addUserByAdmin, updateUserByAdmin, deleteUserByAdmin } = require('../controllers/adminController');
-
+const {createDeviceToken} = require('../controllers/pushNotificationController')
 
 router.post("/sendOtp",sendOtp);
 router.post("/verifyOtp",verifyOtp);
@@ -17,6 +17,9 @@ router.put("/updateuser",verifyToken,updateUser);
 router.post('/updatePassword',updatePassword)
 router.post('/deleteUser',verifyToken,deleteUser)
 router.post('/changePassword',verifyToken,changePassword)
+//device fcm
+router.post('/createDeviceToken',verifyToken,createDeviceToken)
+
 
 // admin routes
 router.use(verifyTokenForAdmin)

@@ -34,3 +34,19 @@ exports.sendPushNotification=asyncHandler(async(userid,message)=>{
     })
   }
 })
+
+exports.createDeviceToken=asyncHandler(async(req,res)=>{
+  const {userId,fcm_token}=req.body
+  const push =await pushNotification.create({
+    userId:userId,
+    fcm_token:fcm_token
+  })
+  if(!push){
+    res.status(400)
+    throw new Error("Device token not created")
+  }
+  res.status(200).json({
+    message:"Device token created",
+    data:push
+  })
+})
