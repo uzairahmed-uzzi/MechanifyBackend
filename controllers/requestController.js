@@ -21,7 +21,9 @@ exports.requestMechanic=asyncHandler(async(req,res)=>{
         res.status(400)
         throw new Error('Request not created')
     }
-    sendPushNotification(mechanic,message)
+    if(message){
+        sendPushNotification(mechanic,message)
+    }
     res.status(200).json({
         message: "Request created succesfully !!..",
         data: request,
